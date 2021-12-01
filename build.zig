@@ -41,15 +41,4 @@ pub fn build(b: *std.build.Builder) void {
         run_step.dependOn(&run_cmd.step);
         run_all.dependOn(&run_cmd.step);
     }
-
-    // Set up a step to run all tests
-    const test_step = b.step("test", "Run all tests");
-    for (test_files) |file| {
-        const test_cmd = b.addTest(file);
-        test_cmd.setTarget(target);
-        test_cmd.setBuildMode(mode);
-        deps.addAllTo(exe);
-
-        test_step.dependOn(&test_cmd.step);
-    }
 }
