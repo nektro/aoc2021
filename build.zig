@@ -1,30 +1,9 @@
 const std = @import("std");
-const Builder = std.build.Builder;
-const LibExeObjStep = std.build.LibExeObjStep;
+const deps = @import("./deps.zig");
 
-// set this to true to link libc
-const should_link_libc = false;
-
-const test_files = [_][]const u8{
-    // list any zig files with tests here
-};
-
-fn linkObject(b: *Builder, obj: *LibExeObjStep) void {
-    if (should_link_libc) obj.linkLibC();
-    _ = b;
-
-    // Add linking for packages or third party libraries here
-}
-
-pub fn build(b: *Builder) void {
-    // Standard target options allows the person running `zig build` to choose
-    // what target to build for. Here we do not override the defaults, which
-    // means any target is allowed, and the default is native. Other options
-    // for restricting supported target set are available.
+pub fn build(b: *std.build.Builder) void {
     const target = b.standardTargetOptions(.{});
 
-    // Standard release options allow the person running `zig build` to select
-    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
     const install_all = b.step("install_all", "Install all days");
@@ -39,7 +18,7 @@ pub fn build(b: *Builder) void {
         const exe = b.addExecutable(dayString, zigFile);
         exe.setTarget(target);
         exe.setBuildMode(mode);
-        linkObject(b, exe);
+        deps.addAllTo(exe);
 
         exe.install();
 
@@ -69,7 +48,7 @@ pub fn build(b: *Builder) void {
         const test_cmd = b.addTest(file);
         test_cmd.setTarget(target);
         test_cmd.setBuildMode(mode);
-        linkObject(b, test_cmd);
+        deps.addAllTo(exe);
 
         test_step.dependOn(&test_cmd.step);
     }
