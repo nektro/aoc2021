@@ -2,15 +2,6 @@ const std = @import("std");
 const string = []const u8;
 
 const input = @embedFile("../input/day12.txt");
-// const input =
-//     \\start-A
-//     \\start-b
-//     \\A-c
-//     \\A-b
-//     \\b-d
-//     \\A-end
-//     \\b-end
-// ;
 
 const List = std.ArrayList(string);
 const Map = std.StringHashMap(List);
